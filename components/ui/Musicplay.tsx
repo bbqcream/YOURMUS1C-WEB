@@ -2,43 +2,61 @@ import Pause from "@/assets/images/pause.svg";
 import Play from "@/assets/images/play.svg";
 import Resume from "@/assets/images/resume.svg";
 import { useMusicControlStore } from "@/stores/musicControllStore";
+import { useMusicInfoStore } from "@/stores/musicInfoStore";
 import { COLOR } from "@/styles/color";
-import { MusicplayProps } from "@/types/MusicplayProps";
-import { useState } from "react";
+import { MusicType } from "@/types/MusicType";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const Musicplay = ({
-    img,
-    title,
-    artist,
-    link,
-    runningtime,
-    plays,
-}: MusicplayProps) => {
-    const [isPlay, setIsPlay] = useState(false);
-    const { isMusicSelected, toggleMusicSelected } = useMusicControlStore();
+const Musicplay = ({ music }: { music: MusicType }) => {
+    const {
+        isMusicSelected,
+        toggleMusicSelected,
+        isMusicPlaying,
+        toggleMusicPlaying,
+    } = useMusicControlStore();
+    const { music: thisMusic, setMusic } = useMusicInfoStore();
+
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={() => console.log(link)}>
-                <Image source={{ uri: img }} style={styles.img} />
+            <TouchableOpacity onPress={() => console.log(music.id)}>
+                <Image source={{ uri: music.artwork }} style={styles.img} />
             </TouchableOpacity>
             <View style={styles.wrap}>
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.artist}>{artist}</Text>
+                <Text style={styles.title}>{music.title}</Text>
+                <Text style={styles.artist}>{music.artist}</Text>
                 <View style={styles.playWrap}>
-                    <Play width={5} />
+                    <Play width={7} />
                     <Text style={styles.plays}>
-                        {plays} · {runningtime}
+                        {music.plays.toLocaleString()} ·{" "}
+                        {Math.floor(music.duration / 60)}:
+                        {String(music.duration % 60).padStart(2, "0")}
                     </Text>
                 </View>
             </View>
             <TouchableOpacity
-                onPressOut={() => {
-                    setIsPlay((prev) => !prev);
-                    {!isMusicSelected ? toggleMusicSelected() : ""}
+                onPress={() => {
+                    if (!isMusicSelected) toggleMusicSelected();
+                    if (music.id !== thisMusic.id) {
+                        setMusic(music);
+                        toggleMusicPlaying(true);
+                    } else {
+                        if (isMusicPlaying) {
+                            toggleMusicPlaying(false);
+                        } else {
+                            toggleMusicPlaying(true);
+                        }
+                    }
                 }}
             >
-                {isPlay ? <Resume width={30} /> : <Pause width={30} />}
+                {music.id === thisMusic.id ? (
+                    isMusicPlaying ? (
+                        <Resume width={30} />
+                    ) : (
+                        <Pause width={30} />
+                    )
+                ) : (
+                    <Pause width={30} />
+                )}
             </TouchableOpacity>
         </View>
     );
@@ -48,11 +66,14 @@ const styles = StyleSheet.create({
     container: {
         width: "100%",
         height: 120,
-        gap: 25,
+        justifyContent: "space-between",
         flexDirection: "row",
         alignItems: "center",
     },
-    wrap: {},
+    wrap: {
+        width: 160,
+        gap: 5,
+    },
     img: {
         height: 120,
         width: 120,

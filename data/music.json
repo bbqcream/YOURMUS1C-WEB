@@ -1,0 +1,69 @@
+
+
+[
+    {
+        "id": 1,
+        "url": "https://example.com/music1.mp3",
+        "title": "넘어와 (feat. 백예린)",
+        "artist": "DEAN",
+        "date": "2023-04-01",
+        "duration": 140,
+        "artwork": "https://i.pravatar.cc/100?u=10",
+        "album": "limbo",
+        "plays": 5000,
+        "isPlay": false,
+        "link": ""
+    },
+    {
+        "id": 2,
+        "url": "https://example.com/music2.mp3",
+        "title": "밤편지",
+        "artist": "아이유",
+        "date": "2017-03-24",
+        "duration": 210,
+        "artwork": "https://i.pravatar.cc/100?u=11",
+        "album": "Palette",
+        "plays": 12000,
+        "isPlay": false,
+        "link": ""
+    },
+    {
+        "id": 3,
+        "url": "https://example.com/music3.mp3",
+        "title": "She’s in the Rain",
+        "artist": "The Rose",
+        "date": "2018-10-04",
+        "duration": 198,
+        "artwork": "https://i.pravatar.cc/100?u=12",
+        "album": "Dawn",
+        "plays": 3500,
+        "isPlay": false,
+        "link": ""
+    },
+    {
+        "id": 4,
+        "url": "https://example.com/music4.mp3",
+        "title": "모래시계",
+        "artist": "임영웅",
+        "date": "2022-05-02",
+        "duration": 235,
+        "artwork": "https://i.pravatar.cc/100?u=13",
+        "album": "IM HERO",
+        "plays": 8300,
+        "isPlay": false,
+        "link": ""
+    },
+    {
+        "id": 5,
+        "url": "https://example.com/music5.mp3",
+        "title": "Ditto",
+        "artist": "NewJeans",
+        "date": "2022-12-19",
+        "duration": 180,
+        "artwork": "https://i.pravatar.cc/100?u=14",
+        "album": "OMG",
+        "plays": 54000,
+        "isPlay": false,
+        "link": ""
+    }
+]

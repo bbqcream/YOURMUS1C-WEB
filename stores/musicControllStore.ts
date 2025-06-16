@@ -5,7 +5,7 @@ interface UseMusicControlStoreProps {
     toggleMusicSelected: () => void;
 
     isMusicPlaying: boolean;
-    toggleMusicPlaying: () => void;
+    toggleMusicPlaying: (val: boolean) => void;
 }
 
 export const useMusicControlStore = create<UseMusicControlStoreProps>(
@@ -15,7 +15,6 @@ export const useMusicControlStore = create<UseMusicControlStoreProps>(
             set((state) => ({ isMusicSelected: !state.isMusicSelected })),
 
         isMusicPlaying: false,
-        toggleMusicPlaying: () =>
-            set((state) => ({ isMusicPlaying: !state.isMusicPlaying })),
+        toggleMusicPlaying: (val: boolean) => set({ isMusicPlaying: val }),
     })
 );

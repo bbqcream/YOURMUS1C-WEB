@@ -1,6 +1,7 @@
 import Musicplay from "@/components/ui/Musicplay";
 import Nav from "@/components/ui/Nav";
 import Userprofile from "@/components/ui/Userprofile";
+import musics from "@/data/music.json";
 import { COLOR } from "@/styles/color";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -25,24 +26,14 @@ export default function HomeScreen() {
                 <View style={styles.spacer} />
                 <Text style={styles.header}>나와 어울리는 노래</Text>
                 <View style={styles.musicWrap}>
-                    <Musicplay
-                        img="https://i.pravatar.cc/100?u=2"
-                        title="넘어와 (feat. 백예린)"
-                        artist="DEAN"
-                        runningtime="4:31"
-                        plays="5000"
-                        isPlay={true}
-                        link=""
-                    />
-                    <Musicplay
-                        img="https://i.pravatar.cc/100?u=10"
-                        title="넘어와 (feat. 백예린)"
-                        artist="DEAN"
-                        runningtime="4:31"
-                        plays="5000"
-                        isPlay={true}
-                        link=""
-                    />
+                    {musics.map((music, index) => {
+                        return (
+                            <Musicplay
+                                key={index}
+                                music={music}
+                            />
+                        );
+                    })}
                 </View>
                 <View style={styles.spacer} />
                 <Text style={styles.header}>과거에 들어본 아티스트</Text>

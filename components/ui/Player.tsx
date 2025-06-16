@@ -1,12 +1,14 @@
 import Pause from "@/assets/images/pause.svg";
 import Resume from "@/assets/images/resume.svg";
 import { useMusicControlStore } from "@/stores/musicControllStore";
+import { useMusicInfoStore } from "@/stores/musicInfoStore";
 import { COLOR } from "@/styles/color";
 import { Image, StyleSheet, Text, View } from "react-native";
 
 const Player = () => {
     const { isMusicPlaying, toggleMusicPlaying, isMusicSelected } =
         useMusicControlStore();
+    const { music } = useMusicInfoStore();
 
     if (!isMusicSelected) {
         return null;
@@ -15,21 +17,21 @@ const Player = () => {
     return (
         <View style={styles.container}>
             <View style={styles.infoWrap}>
-                <Image
-                    source={{ uri: "https://i.pravatar.cc/100?u=4" }}
-                    style={styles.album}
-                />
+                <Image source={{ uri: music.artwork }} style={styles.album} />
                 <View style={styles.textContainer}>
-                    <Text style={styles.title}>넘어와 (feat. 백예린)</Text>
-                    <Text style={styles.artist}>DEAN</Text>
+                    <Text style={styles.title}>{music.title}</Text>
+                    <Text style={styles.artist}>{music.artist}</Text>
                 </View>
             </View>
             <View style={styles.controlWrap}>
-                <Text style={styles.time}>0:00 / 3:30</Text>
+                <Text style={styles.time}>
+                    0:00 / {Math.floor(music.duration / 60)}:
+                    {String(music.duration % 60).padStart(2, "0")}
+                </Text>
                 {isMusicPlaying ? (
-                    <Pause onPress={() => toggleMusicPlaying()} width={30} />
+                    <Resume onPress={() => toggleMusicPlaying(false)} width={30} /> // 지금 재생이 되고 있을 때
                 ) : (
-                    <Resume onPress={() => toggleMusicPlaying()} width={30} />
+                    <Pause onPress={() => toggleMusicPlaying(true)} width={30} /> // 재생 안될 때
                 )}
             </View>
         </View>

@@ -1,12 +1,14 @@
 import Chat from "@/assets/images/chat.svg";
 import Heart from "@/assets/images/heart.svg";
-import Logo from "@/assets/images/logo.svg";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
 const Nav = () => {
     return (
         <View style={styles.navWrap}>
-            <Logo width={150} />
+            <Image
+                source={require("@/assets/images/logo.png")}
+                style={{ width: 176, height: 21 }}
+            />
             <View style={styles.navOptionWrap}>
                 <TouchableOpacity>
                     <Heart width={24} height={24} />
