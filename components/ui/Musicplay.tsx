@@ -1,6 +1,7 @@
 import Pause from "@/assets/images/pause.svg";
 import Play from "@/assets/images/play.svg";
 import Resume from "@/assets/images/resume.svg";
+import { useMusicControlStore } from "@/stores/musicControllStore";
 import { COLOR } from "@/styles/color";
 import { MusicplayProps } from "@/types/MusicplayProps";
 import { useState } from "react";
@@ -15,6 +16,7 @@ const Musicplay = ({
     plays,
 }: MusicplayProps) => {
     const [isPlay, setIsPlay] = useState(false);
+    const { isMusicSelected, toggleMusicSelected } = useMusicControlStore();
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={() => console.log(link)}>
@@ -30,7 +32,12 @@ const Musicplay = ({
                     </Text>
                 </View>
             </View>
-            <TouchableOpacity onPressOut={() => setIsPlay((prev) => !prev)}>
+            <TouchableOpacity
+                onPressOut={() => {
+                    setIsPlay((prev) => !prev);
+                    {!isMusicSelected ? toggleMusicSelected() : ""}
+                }}
+            >
                 {isPlay ? <Resume width={30} /> : <Pause width={30} />}
             </TouchableOpacity>
         </View>

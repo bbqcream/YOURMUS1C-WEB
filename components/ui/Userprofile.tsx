@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "column",
         alignItems: "center",
-        marginHorizontal: 10,
     },
     imgContainer: {
         width: 90,

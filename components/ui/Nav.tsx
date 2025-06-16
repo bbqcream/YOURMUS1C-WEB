@@ -1,7 +1,6 @@
 import Chat from "@/assets/images/chat.svg";
 import Heart from "@/assets/images/heart.svg";
 import Logo from "@/assets/images/logo.svg";
-import { COLOR } from "@/styles/color";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 const Nav = () => {
@@ -26,6 +25,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
+        paddingBottom: 10,
     },
     navOptionWrap: {
         flexDirection: "row",

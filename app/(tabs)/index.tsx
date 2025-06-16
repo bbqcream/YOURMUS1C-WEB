@@ -57,6 +57,7 @@ export default function HomeScreen() {
                         link=""
                     />
                 </ScrollView>
+                <View style={{ height: 100 }} />
             </ScrollView>
         </SafeAreaView>
     );
@@ -66,11 +67,13 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: COLOR.black,
         flex: 1,
+        paddingBottom: 30,
     },
     navWrap: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
+        paddingBottom: 30,
     },
     navOptionWrap: {
         flexDirection: "row",
@@ -92,6 +95,7 @@ const styles = StyleSheet.create({
     },
     wrap: {
         paddingHorizontal: 20,
+        marginBottom: 30,
     },
     userprofileContent: {
         flexDirection: "row",
