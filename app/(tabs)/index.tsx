@@ -1,30 +1,100 @@
+import Musicplay from "@/components/ui/Musicplay";
+import Nav from "@/components/ui/Nav";
+import Userprofile from "@/components/ui/Userprofile";
 import { COLOR } from "@/styles/color";
-import Logo from "@/assets/images/logo.svg";
-import { StyleSheet } from "react-native";
-
-import { ScrollView } from "react-native-gesture-handler";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function HomeScreen() {
     return (
-        <ScrollView style={styles.container}>
-            <Logo />
-        </ScrollView>
+        <SafeAreaView style={styles.container}>
+            <Nav />
+            <ScrollView style={styles.wrap}>
+                <View style={styles.spacer} />
+                <Text style={styles.header}>요즘 뜨는 아티스트</Text>
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.userprofileContent}
+                >
+                    <Userprofile
+                        img="https://i.pravatar.cc/100?u=1"
+                        name="DEAN"
+                        link=""
+                    />
+                </ScrollView>
+                <View style={styles.spacer} />
+                <Text style={styles.header}>나와 어울리는 노래</Text>
+                <View style={styles.musicWrap}>
+                    <Musicplay
+                        img="https://i.pravatar.cc/100?u=2"
+                        title="넘어와 (feat. 백예린)"
+                        artist="DEAN"
+                        runningtime="4:31"
+                        plays="5000"
+                        isPlay={true}
+                        link=""
+                    />
+                    <Musicplay
+                        img="https://i.pravatar.cc/100?u=10"
+                        title="넘어와 (feat. 백예린)"
+                        artist="DEAN"
+                        runningtime="4:31"
+                        plays="5000"
+                        isPlay={true}
+                        link=""
+                    />
+                </View>
+                <View style={styles.spacer} />
+                <Text style={styles.header}>과거에 들어본 아티스트</Text>
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.userprofileContent}
+                >
+                    <Userprofile
+                        img="https://i.pravatar.cc/100?u=4"
+                        name="DEAN"
+                        link=""
+                    />
+                </ScrollView>
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: `${COLOR.black}`,
+        backgroundColor: COLOR.black,
+        flex: 1,
     },
-    stepContainer: {
-        gap: 8,
+    navWrap: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    navOptionWrap: {
+        flexDirection: "row",
+        gap: 10,
+        alignItems: "center",
+    },
+    header: {
+        color: COLOR.white,
+        fontSize: 22,
+        fontWeight: "700",
         marginBottom: 8,
     },
-    reactLogo: {
-        height: 178,
-        width: 290,
-        bottom: 0,
-        left: 0,
-        position: "absolute",
+    spacer: {
+        height: 30,
+    },
+    musicWrap: {
+        flexDirection: "column",
+        gap: 10,
+    },
+    wrap: {
+        paddingHorizontal: 20,
+    },
+    userprofileContent: {
+        flexDirection: "row",
+        paddingVertical: 10,
     },
 });
