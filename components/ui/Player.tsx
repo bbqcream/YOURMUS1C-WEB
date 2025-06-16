@@ -4,6 +4,7 @@ import { useMusicControlStore } from "@/stores/musicControllStore";
 import { useMusicInfoStore } from "@/stores/musicInfoStore";
 import { COLOR } from "@/styles/color";
 import { Image, StyleSheet, Text, View } from "react-native";
+import TrackPlayer from "react-native-track-player";
 
 const Player = () => {
     const { isMusicPlaying, toggleMusicPlaying, isMusicSelected } =
@@ -29,9 +30,21 @@ const Player = () => {
                     {String(music.duration % 60).padStart(2, "0")}
                 </Text>
                 {isMusicPlaying ? (
-                    <Resume onPress={() => toggleMusicPlaying(false)} width={30} /> // 지금 재생이 되고 있을 때
+                    <Resume
+                        onPress={async () => {
+                            await TrackPlayer.pause();
+                            toggleMusicPlaying(false);
+                        }}
+                        width={30}
+                    />
                 ) : (
-                    <Pause onPress={() => toggleMusicPlaying(true)} width={30} /> // 재생 안될 때
+                    <Pause
+                        onPress={async () => {
+                            await TrackPlayer.play();
+                            toggleMusicPlaying(true);
+                        }}
+                        width={30}
+                    />
                 )}
             </View>
         </View>

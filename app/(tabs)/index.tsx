@@ -27,12 +27,7 @@ export default function HomeScreen() {
                 <Text style={styles.header}>나와 어울리는 노래</Text>
                 <View style={styles.musicWrap}>
                     {musics.map((music, index) => {
-                        return (
-                            <Musicplay
-                                key={index}
-                                music={music}
-                            />
-                        );
+                        return <Musicplay key={index} music={music} />;
                     })}
                 </View>
                 <View style={styles.spacer} />
@@ -58,7 +53,6 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: COLOR.black,
         flex: 1,
-        paddingBottom: 30,
     },
     navWrap: {
         flexDirection: "row",

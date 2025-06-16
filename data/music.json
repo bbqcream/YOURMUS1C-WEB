@@ -1,9 +1,7 @@
-
-
 [
     {
         "id": 1,
-        "url": "https://example.com/music1.mp3",
+        "url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
         "title": "넘어와 (feat. 백예린)",
         "artist": "DEAN",
         "date": "2023-04-01",
@@ -16,7 +14,7 @@
     },
     {
         "id": 2,
-        "url": "https://example.com/music2.mp3",
+        "url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
         "title": "밤편지",
         "artist": "아이유",
         "date": "2017-03-24",
@@ -29,7 +27,7 @@
     },
     {
         "id": 3,
-        "url": "https://example.com/music3.mp3",
+        "url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
         "title": "She’s in the Rain",
         "artist": "The Rose",
         "date": "2018-10-04",
@@ -42,7 +40,7 @@
     },
     {
         "id": 4,
-        "url": "https://example.com/music4.mp3",
+        "url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
         "title": "모래시계",
         "artist": "임영웅",
         "date": "2022-05-02",
@@ -55,7 +53,7 @@
     },
     {
         "id": 5,
-        "url": "https://example.com/music5.mp3",
+        "url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
         "title": "Ditto",
         "artist": "NewJeans",
         "date": "2022-12-19",

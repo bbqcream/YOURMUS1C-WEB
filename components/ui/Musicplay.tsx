@@ -6,6 +6,7 @@ import { useMusicInfoStore } from "@/stores/musicInfoStore";
 import { COLOR } from "@/styles/color";
 import { MusicType } from "@/types/MusicType";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import TrackPlayer from "react-native-track-player";
 
 const Musicplay = ({ music }: { music: MusicType }) => {
     const {
@@ -34,16 +35,28 @@ const Musicplay = ({ music }: { music: MusicType }) => {
                 </View>
             </View>
             <TouchableOpacity
-                onPress={() => {
+                onPress={async () => {
                     if (!isMusicSelected) toggleMusicSelected();
+
                     if (music.id !== thisMusic.id) {
                         setMusic(music);
                         toggleMusicPlaying(true);
+                        await TrackPlayer.reset();
+                        await TrackPlayer.add({
+                            id: music.id.toString(),
+                            url: music.url,
+                            title: music.title,
+                            artist: music.artist,
+                            artwork: music.artwork,
+                        });
+                        await TrackPlayer.play();
                     } else {
                         if (isMusicPlaying) {
                             toggleMusicPlaying(false);
+                            await TrackPlayer.pause();
                         } else {
                             toggleMusicPlaying(true);
+                            await TrackPlayer.play();
                         }
                     }
                 }}

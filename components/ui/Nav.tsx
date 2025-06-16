@@ -1,14 +1,12 @@
 import Chat from "@/assets/images/chat.svg";
 import Heart from "@/assets/images/heart.svg";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import Logo from "@/assets/images/logo.svg";
+import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 
 const Nav = () => {
     return (
         <View style={styles.navWrap}>
-            <Image
-                source={require("@/assets/images/logo.png")}
-                style={{ width: 176, height: 21 }}
-            />
+            <Logo height={20} />
             <View style={styles.navOptionWrap}>
                 <TouchableOpacity>
                     <Heart width={24} height={24} />
@@ -23,6 +21,7 @@ const Nav = () => {
 
 const styles = StyleSheet.create({
     navWrap: {
+        paddingTop: Platform.OS === "android" ? 50 : 0,
         paddingHorizontal: 20,
         flexDirection: "row",
         justifyContent: "space-between",
