@@ -1,6 +1,6 @@
-import Musicplay from "@/components/ui/Musicplay";
-import Nav from "@/components/ui/Nav";
-import Userprofile from "@/components/ui/Userprofile";
+import Musicplay from "@/components/ui/home/Musicplay";
+import Nav from "@/components/ui/home/Nav";
+import Userprofile from "@/components/ui/home/Userprofile";
 import musics from "@/data/music.json";
 import { COLOR } from "@/styles/color";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";

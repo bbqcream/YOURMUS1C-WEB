@@ -7,7 +7,7 @@ import { usePlayTime } from "@/hooks/usePlayTime";
 import { useMusicControlStore } from "@/stores/musicControllStore";
 import { useMusicInfoStore } from "@/stores/musicInfoStore";
 import { COLOR } from "@/styles/color";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
     Animated,
     Dimensions,
@@ -29,31 +29,36 @@ const PlayOverlay = ({ onClose }: { onClose: () => void }) => {
     const { position, duration } = usePlayTime();
     const { music } = useMusicInfoStore();
     const slideAnim = useRef(new Animated.Value(height)).current;
+    const [seek, setSeek] = useState(position);
+
+    const [isSeeking, setIsSeeking] = useState(false);
+
+    useEffect(() => {
+        if (!isSeeking) {
+            setSeek(position);
+        }
+    }, [position]);
 
     const panResponder = useRef(
         PanResponder.create({
-            onMoveShouldSetPanResponder: (_, gestureState) =>
-                Math.abs(gestureState.dy) > 10,
-
-            onPanResponderMove: (_, gestureState) => {
-                if (gestureState.dy > 0) {
-                    slideAnim.setValue(gestureState.dy);
-                }
+            onStartShouldSetPanResponder: () => true,
+            onPanResponderGrant: () => {
+                setIsSeeking(true);
             },
-
-            onPanResponderRelease: (_, gestureState) => {
-                if (gestureState.dy > 300) {
-                    Animated.timing(slideAnim, {
-                        toValue: height,
-                        duration: 200,
-                        useNativeDriver: true,
-                    }).start(() => onClose());
-                } else {
-                    Animated.spring(slideAnim, {
-                        toValue: 0,
-                        useNativeDriver: true,
-                    }).start();
-                }
+            onPanResponderMove: (_, gestureState) => {
+                const newSeek = Math.min(
+                    Math.max(0, (gestureState.moveX / width) * duration),
+                    duration
+                );
+                setSeek(newSeek);
+            },
+            onPanResponderRelease: async (_, gestureState) => {
+                const finalSeek = Math.min(
+                    Math.max(0, (gestureState.moveX / width) * duration),
+                    duration
+                );
+                await TrackPlayer.seekTo(finalSeek);
+                setIsSeeking(false);
             },
         })
     ).current;
@@ -102,28 +107,27 @@ const PlayOverlay = ({ onClose }: { onClose: () => void }) => {
                 {/* 재생바 */}
                 <View style={styles.spacer} />
                 <View
+                    {...panResponder.panHandlers}
                     style={{
                         flexDirection: "row",
                         width: width,
-                        height: 4,
-                        borderRadius: 4,
+                        height: 6,
+                        backgroundColor: COLOR.gray,
+                        borderRadius: 3,
                         overflow: "hidden",
                     }}
                 >
-                    {/* 진행된 부분 */}
                     <View
                         style={{
+                            width: width * (seek / duration),
                             backgroundColor: COLOR.white,
-                            width: width * (position / duration),
-                            height: 4,
-                            borderRadius: 4,
-                            overflow: "hidden",
+                            height: 6,
                         }}
                     />
-
-                    {/* 남은 부분 */}
-                    <View style={{ backgroundColor: COLOR.gray, flex: 1 }} />
                 </View>
+
+                {/* 남은 부분 */}
+                <View style={{ backgroundColor: COLOR.gray, flex: 1 }} />
                 {/* 재생 시간 */}
                 <View style={{ marginTop: 5 }} />
                 <View style={styles.runTimeWrap}>
@@ -276,7 +280,7 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
         width: "100%",
-        gap: 20,
+        gap: 10,
     },
     header: {
         color: COLOR.white,
