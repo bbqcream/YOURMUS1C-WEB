@@ -25,12 +25,12 @@ const { height, width } = Dimensions.get("window");
 const NAV_HEIGHT = 80;
 
 const PlayOverlay = ({ onClose }: { onClose: () => void }) => {
+    const [startSeek, setStartSeek] = useState(0);
     const { isMusicPlaying, toggleMusicPlaying } = useMusicControlStore();
     const { position, duration } = usePlayTime();
     const { music } = useMusicInfoStore();
     const slideAnim = useRef(new Animated.Value(height)).current;
     const [seek, setSeek] = useState(position);
-
     const [isSeeking, setIsSeeking] = useState(false);
 
     useEffect(() => {
@@ -42,22 +42,60 @@ const PlayOverlay = ({ onClose }: { onClose: () => void }) => {
     const panResponder = useRef(
         PanResponder.create({
             onStartShouldSetPanResponder: () => true,
+            onMoveShouldSetPanResponder: () => false,
             onPanResponderGrant: () => {
                 setIsSeeking(true);
+                setStartSeek(seek);
+            },
+            onPanResponderRelease: async (_, gestureState) => {
+                const deltaX = gestureState.dx;
+                if (Math.abs(deltaX) < 5) {
+                    setIsSeeking(false);
+                    return;
+                }
+
+                const finalSeek = Math.min(
+                    Math.max(0, startSeek + (deltaX / width) * duration),
+                    duration
+                );
+                await TrackPlayer.seekTo(finalSeek);
+                setSeek(finalSeek);
+                setIsSeeking(false);
+            },
+        })
+    ).current;
+
+    const barResponder = useRef(
+        PanResponder.create({
+            onStartShouldSetPanResponder: () => true,
+            onMoveShouldSetPanResponder: () => true,
+            onPanResponderGrant: () => {
+                setIsSeeking(true);
+                setStartSeek(seek);
             },
             onPanResponderMove: (_, gestureState) => {
+                const deltaX = gestureState.dx;
+                const seekPercent = deltaX / width;
                 const newSeek = Math.min(
-                    Math.max(0, (gestureState.moveX / width) * duration),
+                    Math.max(0, startSeek + seekPercent * duration),
                     duration
                 );
                 setSeek(newSeek);
             },
             onPanResponderRelease: async (_, gestureState) => {
+                const deltaX = gestureState.dx;
+
+                if (Math.abs(deltaX) < 5) {
+                    setIsSeeking(false);
+                    return;
+                }
+
                 const finalSeek = Math.min(
-                    Math.max(0, (gestureState.moveX / width) * duration),
+                    Math.max(0, startSeek + (deltaX / width) * duration),
                     duration
                 );
                 await TrackPlayer.seekTo(finalSeek);
+                setSeek(finalSeek);
                 setIsSeeking(false);
             },
         })
@@ -69,14 +107,6 @@ const PlayOverlay = ({ onClose }: { onClose: () => void }) => {
             duration: 300,
             useNativeDriver: true,
             easing: Easing.out(Easing.ease),
-        }).start();
-    }, []);
-    useEffect(() => {
-        Animated.timing(slideAnim, {
-            toValue: 0,
-            duration: 300,
-            easing: Easing.out(Easing.ease),
-            useNativeDriver: true,
         }).start();
     }, []);
 
@@ -92,7 +122,7 @@ const PlayOverlay = ({ onClose }: { onClose: () => void }) => {
     };
 
     return (
-        <Animated.View
+        <Animated.ScrollView
             style={[styles.overlay, { transform: [{ translateY: slideAnim }] }]}
             {...panResponder.panHandlers}
         >
@@ -104,10 +134,10 @@ const PlayOverlay = ({ onClose }: { onClose: () => void }) => {
                     <Text style={styles.title}>{music.title}</Text>
                     <Text style={styles.artist}>{music.artist}</Text>
                 </View>
-                {/* 재생바 */}
                 <View style={styles.spacer} />
+                {/* Seek Bar */}
                 <View
-                    {...panResponder.panHandlers}
+                    {...barResponder.panHandlers}
                     style={{
                         flexDirection: "row",
                         width: width,
@@ -125,10 +155,7 @@ const PlayOverlay = ({ onClose }: { onClose: () => void }) => {
                         }}
                     />
                 </View>
-
-                {/* 남은 부분 */}
                 <View style={{ backgroundColor: COLOR.gray, flex: 1 }} />
-                {/* 재생 시간 */}
                 <View style={{ marginTop: 5 }} />
                 <View style={styles.runTimeWrap}>
                     <Text style={styles.time}>
@@ -164,33 +191,29 @@ const PlayOverlay = ({ onClose }: { onClose: () => void }) => {
                     <Next width={20} height={20} />
                 </View>
                 <View style={styles.spacer} />
-                {/* 가사 */}
                 <View style={styles.infoContainer}>
                     <Text style={styles.header}>가사</Text>
                     <Text style={styles.detail}>
-                        {music.lyrics !== "" ? (
-                            <Text style={styles.detail}>{music.lyrics}</Text>
-                        ) : (
-                            <Text style={styles.detail}>가사가 없습니다.</Text>
-                        )}
+                        {music.lyrics !== ""
+                            ? music.lyrics
+                            : "가사가 없습니다."}
                     </Text>
                 </View>
                 <View style={styles.spacer} />
-                {/* 크레딧 */}
                 <View style={styles.infoContainer}>
                     <Text style={styles.header}>크레딧</Text>
                     <View style={styles.detailWrap}>
-                        {music.lyricist !== "" && (
+                        {music.lyricist && (
                             <Text style={styles.detail}>
                                 작사 | {music.lyricist}
                             </Text>
                         )}
-                        {music.composer !== "" && (
+                        {music.composer && (
                             <Text style={styles.detail}>
                                 작곡 | {music.composer}
                             </Text>
                         )}
-                        {music.arranger !== "" && (
+                        {music.arranger && (
                             <Text style={styles.detail}>
                                 편곡 | {music.arranger}
                             </Text>
@@ -198,27 +221,19 @@ const PlayOverlay = ({ onClose }: { onClose: () => void }) => {
                     </View>
                 </View>
                 <View style={styles.spacer} />
-                {/* 노래 정보 */}
                 <View style={styles.infoContainer}>
                     <Text style={styles.header}>노래 정보</Text>
                     <Text style={styles.detail}>
-                        {music.description !== "" ? (
-                            <Text style={styles.detail}>
-                                {music.description}
-                            </Text>
-                        ) : (
-                            <Text style={styles.detail}>
-                                노래 정보가 없습니다.
-                            </Text>
-                        )}
+                        {music.description !== ""
+                            ? music.description
+                            : "노래 정보가 없습니다."}
                     </Text>
                 </View>
                 <View style={styles.spacer} />
             </ScrollView>
-        </Animated.View>
+        </Animated.ScrollView>
     );
 };
-
 const styles = StyleSheet.create({
     overlay: {
         position: "absolute",
