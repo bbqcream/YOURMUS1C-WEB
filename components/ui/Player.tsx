@@ -4,53 +4,68 @@ import { usePlayTime } from "@/hooks/usePlayTime";
 import { useMusicControlStore } from "@/stores/musicControllStore";
 import { useMusicInfoStore } from "@/stores/musicInfoStore";
 import { COLOR } from "@/styles/color";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import TrackPlayer from "react-native-track-player";
+import PlayOverlay from "./PlayOverlay";
 
 const Player = () => {
     const { isMusicPlaying, toggleMusicPlaying, isMusicSelected } =
         useMusicControlStore();
     const { music } = useMusicInfoStore();
     const { position, duration } = usePlayTime();
+    const [showOverlay, setShowOverlay] = useState(false);
 
     if (!isMusicSelected) {
         return null;
     }
     return (
-        <View style={styles.container}>
-            <View style={styles.infoWrap}>
-                <Image source={{ uri: music.artwork }} style={styles.album} />
-                <View style={styles.textContainer}>
-                    <Text style={styles.title}>{music.title}</Text>
-                    <Text style={styles.artist}>{music.artist}</Text>
+        <>
+            <TouchableOpacity onPress={() => setShowOverlay(!showOverlay)}>
+                <View style={styles.container}>
+                    <View style={styles.infoWrap}>
+                        <Image
+                            source={{ uri: music.artwork }}
+                            style={styles.album}
+                        />
+                        <View style={styles.textContainer}>
+                            <Text style={styles.title}>{music.title}</Text>
+                            <Text style={styles.artist}>{music.artist}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.controlWrap}>
+                        <Text style={styles.time}>
+                            {Math.floor(position / 60)}:
+                            {String(Math.floor(position % 60)).padStart(2, "0")}{" "}
+                            / {Math.floor(duration / 60)}:
+                            {String(Math.floor(duration % 60)).padStart(2, "0")}
+                        </Text>
+                        {isMusicPlaying ? (
+                            <Resume
+                                onPress={async () => {
+                                    await TrackPlayer.pause();
+                                    toggleMusicPlaying(false);
+                                }}
+                                width={30}
+                                height={30}
+                            />
+                        ) : (
+                            <Pause
+                                onPress={async () => {
+                                    await TrackPlayer.play();
+                                    toggleMusicPlaying(true);
+                                }}
+                                width={30}
+                                height={30}
+                            />
+                        )}
+                    </View>
                 </View>
-            </View>
-            <View style={styles.controlWrap}>
-                <Text style={styles.time}>
-                    {Math.floor(position / 60)}:
-                    {String(Math.floor(position % 60)).padStart(2, "0")}/{" "}
-                    {Math.floor(duration / 60)}:
-                    {String(Math.floor(duration % 60)).padStart(2, "0")}
-                </Text>
-                {isMusicPlaying ? (
-                    <Resume
-                        onPress={async () => {
-                            await TrackPlayer.pause();
-                            toggleMusicPlaying(false);
-                        }}
-                        width={30}
-                    />
-                ) : (
-                    <Pause
-                        onPress={async () => {
-                            await TrackPlayer.play();
-                            toggleMusicPlaying(true);
-                        }}
-                        width={30}
-                    />
-                )}
-            </View>
-        </View>
+            </TouchableOpacity>
+            {showOverlay && (
+                <PlayOverlay onClose={() => setShowOverlay(false)} />
+            )}
+        </>
     );
 };
 

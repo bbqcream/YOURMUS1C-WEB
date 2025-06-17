@@ -20,6 +20,11 @@ const initialMusic: MusicType = {
     plays: 0,
     isPlay: false,
     playTime: 0,
+    lyrics: "",
+    lyricist: "",
+    composer: "",
+    arranger: "",
+    description: "",
 };
 
 export const useMusicInfoStore = create<MusicInfoStore>((set) => ({

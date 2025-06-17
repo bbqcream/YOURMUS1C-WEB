@@ -10,5 +10,9 @@ export interface MusicType {
     album: string;
     plays: number;
     playTime: number; // 노래 틀리기
+    lyrics?: string | null;
+    lyricist?: string | null;
+    composer?: string | null;
+    arranger?: string | null;
+    description?: string | null;
 }
-
