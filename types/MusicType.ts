@@ -9,4 +9,6 @@ export interface MusicType {
     isPlay: boolean; // 지금 선택 돼있는지의 여부
     album: string;
     plays: number;
+    playTime: number; // 노래 틀리기
 }
+

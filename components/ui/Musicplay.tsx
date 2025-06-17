@@ -17,6 +17,33 @@ const Musicplay = ({ music }: { music: MusicType }) => {
     } = useMusicControlStore();
     const { music: thisMusic, setMusic } = useMusicInfoStore();
 
+    const handlePress = async () => {
+        if (!isMusicSelected) toggleMusicSelected();
+
+        if (music.id !== thisMusic.id) {
+            setMusic(music);
+            toggleMusicPlaying(true);
+            await TrackPlayer.reset();
+            await TrackPlayer.add({
+                id: music.id.toString(),
+                url: music.url,
+                title: music.title,
+                artist: music.artist,
+                artwork: music.artwork,
+                duration: music.duration,
+            });
+            await TrackPlayer.play();
+        } else {
+            if (isMusicPlaying) {
+                toggleMusicPlaying(false);
+                await TrackPlayer.pause();
+            } else {
+                toggleMusicPlaying(true);
+                await TrackPlayer.play();
+            }
+        }
+    };
+
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={() => console.log(music.id)}>
@@ -34,33 +61,7 @@ const Musicplay = ({ music }: { music: MusicType }) => {
                     </Text>
                 </View>
             </View>
-            <TouchableOpacity
-                onPress={async () => {
-                    if (!isMusicSelected) toggleMusicSelected();
-
-                    if (music.id !== thisMusic.id) {
-                        setMusic(music);
-                        toggleMusicPlaying(true);
-                        await TrackPlayer.reset();
-                        await TrackPlayer.add({
-                            id: music.id.toString(),
-                            url: music.url,
-                            title: music.title,
-                            artist: music.artist,
-                            artwork: music.artwork,
-                        });
-                        await TrackPlayer.play();
-                    } else {
-                        if (isMusicPlaying) {
-                            toggleMusicPlaying(false);
-                            await TrackPlayer.pause();
-                        } else {
-                            toggleMusicPlaying(true);
-                            await TrackPlayer.play();
-                        }
-                    }
-                }}
-            >
+            <TouchableOpacity onPress={handlePress}>
                 {music.id === thisMusic.id ? (
                     isMusicPlaying ? (
                         <Resume width={30} />

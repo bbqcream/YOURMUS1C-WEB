@@ -1,5 +1,6 @@
 import Pause from "@/assets/images/pause.svg";
 import Resume from "@/assets/images/resume.svg";
+import { usePlayTime } from "@/hooks/usePlayTime";
 import { useMusicControlStore } from "@/stores/musicControllStore";
 import { useMusicInfoStore } from "@/stores/musicInfoStore";
 import { COLOR } from "@/styles/color";
@@ -10,11 +11,11 @@ const Player = () => {
     const { isMusicPlaying, toggleMusicPlaying, isMusicSelected } =
         useMusicControlStore();
     const { music } = useMusicInfoStore();
+    const { position, duration } = usePlayTime();
 
     if (!isMusicSelected) {
         return null;
     }
-
     return (
         <View style={styles.container}>
             <View style={styles.infoWrap}>
@@ -26,8 +27,10 @@ const Player = () => {
             </View>
             <View style={styles.controlWrap}>
                 <Text style={styles.time}>
-                    0:00 / {Math.floor(music.duration / 60)}:
-                    {String(music.duration % 60).padStart(2, "0")}
+                    {Math.floor(position / 60)}:
+                    {String(Math.floor(position % 60)).padStart(2, "0")}/{" "}
+                    {Math.floor(duration / 60)}:
+                    {String(Math.floor(duration % 60)).padStart(2, "0")}
                 </Text>
                 {isMusicPlaying ? (
                     <Resume

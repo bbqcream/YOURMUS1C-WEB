@@ -19,6 +19,7 @@ const initialMusic: MusicType = {
     album: "",
     plays: 0,
     isPlay: false,
+    playTime: 0,
 };
 
 export const useMusicInfoStore = create<MusicInfoStore>((set) => ({
