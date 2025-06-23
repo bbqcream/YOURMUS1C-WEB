@@ -1,19 +1,18 @@
 {
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true,
-    "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
-  },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts",
-    "declarations.d.ts"
-
-  ]
+    "extends": "expo/tsconfig.base",
+    "compilerOptions": {
+        "strict": true,
+        "paths": {
+            "@/*": ["./*"]
+        }
+    },
+    "include": [
+        "**/*.ts",
+        "**/*.tsx",
+        ".expo/types/**/*.ts",
+        "expo-env.d.ts",
+        "declarations.d.ts",
+        "env.d.ts",
+        "src/**/*"
+, "babel.config.js"    ]
 }
