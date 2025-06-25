@@ -1,60 +1,87 @@
 import Logo from "@/assets/images/bluelogo.svg";
+import AuthInput from "@/components/auth/AuthInput";
+import { useRegister } from "@/hooks/useRegister";
+import { useLoadingStore } from "@/stores/setLoadingStore";
 import { COLOR } from "@/styles/color";
 import { router } from "expo-router";
-import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Register = () => {
+    const {
+        register,
+        id,
+        setId,
+        pw,
+        setPw,
+        error,
+        name,
+        setEmail,
+        email,
+        setName,
+        rePw,
+        setRePw,
+    } = useRegister();
+    const { loading } = useLoadingStore();
     return (
         <SafeAreaView style={styles.container}>
             <Logo width={400} />
             <View style={styles.spacer} />
             <View style={styles.inputWrap}>
-                <View style={styles.textWrap}>
-                    <Text style={styles.inputText}>아이디</Text>
-                    <TextInput
-                        placeholder="아이디를 입력해주세요."
-                        style={styles.input}
-                    />
-                </View>
-                <View style={styles.textWrap}>
-                    <Text style={styles.inputText}>비밀번호</Text>
-                    <TextInput
-                        placeholder="비밀번호를 입력해주세요."
-                        style={styles.input}
-                    />
-                </View>
-                <View style={styles.textWrap}>
-                    <Text style={styles.inputText}>비밀번호 재입력</Text>
-                    <TextInput
-                        placeholder="비밀번호를 재입력해주세요."
-                        style={styles.input}
-                    />
-                </View>
-                <View style={styles.textWrap}>
-                    <Text style={styles.inputText}>이메일</Text>
-                    <TextInput
-                        placeholder="이메일을 입력해주세요."
-                        style={styles.input}
-                    />
-                </View>
+                <AuthInput
+                    title="이름"
+                    value={name}
+                    setValue={setName}
+                    isError={error}
+                    placeholder="이름을 입력해주세요."
+                    isPw={false}
+                />
+                <AuthInput
+                    title="아이디"
+                    value={id}
+                    setValue={setId}
+                    isError={error}
+                    placeholder="아이디를 입력해주세요."
+                    isPw={false}
+                />
+                <AuthInput
+                    title="비밀번호"
+                    value={pw}
+                    setValue={setPw}
+                    isError={error}
+                    placeholder="비밀번호을 입력해주세요."
+                    isPw={true}
+                />
+                <AuthInput
+                    title="비밀번호 재입력"
+                    value={rePw}
+                    setValue={setRePw}
+                    isError={error}
+                    placeholder="비밀번호를 재입력해주세요."
+                    isPw={true}
+                />
+                <AuthInput
+                    title="이메일"
+                    value={email}
+                    setValue={setEmail}
+                    isError={error}
+                    placeholder="이메일을 입력해주세요."
+                    isPw={false}
+                />
             </View>
             <View style={styles.spacer} />
-            <TouchableOpacity style={styles.button}>
-                <Text
-                    style={{
-                        color: COLOR.white,
-                        fontSize: 20,
-                        fontWeight: 600,
-                    }}
-                >
-                    회원가입
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                    if (!loading) {
+                        register();
+                    } else {
+                        console.log("로딩 중");
+                    }
+                }}
+            >
+                <Text style={styles.loginText}>
+                    {!loading ? "회원가입" : "로딩중"}
                 </Text>
             </TouchableOpacity>
             <View style={{ height: 40 }} />
@@ -97,6 +124,12 @@ const styles = StyleSheet.create({
     inputWrap: {
         gap: 20,
         width: "100%",
+    },
+
+    loginText: {
+        color: COLOR.white,
+        fontSize: 20,
+        fontWeight: "600",
     },
     button: {
         backgroundColor: COLOR.main,

@@ -8,7 +8,6 @@ export default function HomeScreen() {
         <SafeAreaView style={styles.container}>
             <Nav />
             <ScrollView style={styles.wrap}>
-                
             </ScrollView>
         </SafeAreaView>
     );

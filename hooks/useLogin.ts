@@ -1,38 +1,42 @@
 import { useLoadingStore } from "@/stores/setLoadingStore";
-import { API_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { router } from "expo-router";
 import { useState } from "react";
 
 export const useLogin = () => {
     const [id, setId] = useState<string>("");
     const [pw, setPw] = useState<string>("");
-    const [error, setError] = useState<any>();
+    const [error, setError] = useState<boolean>(false);
     const { setLoading } = useLoadingStore();
 
-    const loginRes = {
-        id: id,
-        pw: pw,
-    };
-
     const login = async () => {
+        setLoading(true);
         try {
-            setLoading(true);
-            const res = await axios.post(`${API_URL}/`, loginRes);
+            const res = await axios.post("http://localhost:9090/auth/login", {
+                username: id,
+                password: pw,
+            });
             if (res.status === 200 || res.status === 201) {
-                alert("로그인에 성공했습니다.");
+                router.push("/home");
                 await AsyncStorage.setItem("accessToken", res.data.accessToken);
                 await AsyncStorage.setItem(
                     "refreshToken",
-                    res.data.refeshToken
+                    res.data.refreshToken
                 );
-                setLoading(false);
+                return;
             } else {
-                setError(res.status);
+                alert("로그인에 실패했습니다.");
+                setError(false);
             }
-        } catch (err) {
+        } catch (err: any) {
             alert("로그인에 실패했습니다.");
+            console.log(err);
+            setError(true);
+        } finally {
+            setLoading(false);
         }
     };
+
     return { login, id, setId, pw, setPw, error };
 };

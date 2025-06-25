@@ -1,48 +1,50 @@
 import Logo from "@/assets/images/bluelogo.svg";
+import LoginInput from "@/components/auth/AuthInput";
 import { useLogin } from "@/hooks/useLogin";
+import { useLoadingStore } from "@/stores/setLoadingStore";
 import { COLOR } from "@/styles/color";
 import { router } from "expo-router";
-import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Login = () => {
-    const { id } = useLogin();
+    const { id, setId, pw, setPw, login, error } = useLogin();
+    const { loading } = useLoadingStore();
     return (
         <SafeAreaView style={styles.container}>
             <Logo width={250} height={60} />
             <View style={styles.spacer} />
             <View style={styles.inputWrap}>
-                <View style={styles.textWrap}>
-                    <Text style={styles.inputText}>아이디</Text>
-                    <TextInput
-                        placeholder="아이디를 입력해주세요."
-                        style={styles.input}
-                    />
-                </View>
-                <View style={styles.textWrap}>
-                    <Text style={styles.inputText}>비밀번호</Text>
-                    <TextInput
-                        placeholder="비밀번호를 입력해주세요."
-                        style={styles.input}
-                    />
-                </View>
+                <LoginInput
+                    placeholder="아이디를 입력해주세요."
+                    value={id}
+                    setValue={setId}
+                    isError={error}
+                    title="아이디"
+                    isPw={false}
+                />
+                <LoginInput
+                    placeholder="비밀번호를 입력해주세요."
+                    value={pw}
+                    setValue={setPw}
+                    isError={error}
+                    title="비밀번호"
+                    isPw={true}
+                />
             </View>
             <View style={styles.spacer} />
-            <TouchableOpacity style={styles.button}>
-                <Text
-                    style={{
-                        color: COLOR.white,
-                        fontSize: 20,
-                        fontWeight: 600,
-                    }}
-                >
-                    로그인
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                    if (!loading) {
+                        login();
+                    } else {
+                        console.log("로딩 중");
+                    }
+                }}
+            >
+                <Text style={styles.loginText}>
+                    {!loading ? "로그인" : "로딩중"}
                 </Text>
             </TouchableOpacity>
             <View style={{ height: 40 }} />
@@ -86,6 +88,11 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         width: "100%",
         gap: 4,
+    },
+    loginText: {
+        color: COLOR.white,
+        fontSize: 20,
+        fontWeight: "600",
     },
     spacer: {
         height: 70,
