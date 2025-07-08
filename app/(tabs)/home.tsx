@@ -54,17 +54,6 @@ const styles = StyleSheet.create({
         backgroundColor: COLOR.black,
         flex: 1,
     },
-    navWrap: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingBottom: 30,
-    },
-    navOptionWrap: {
-        flexDirection: "row",
-        gap: 10,
-        alignItems: "center",
-    },
     header: {
         color: COLOR.white,
         fontSize: 22,

@@ -1,13 +1,14 @@
 import Nav from "@/components/ui/home/Nav";
 import { COLOR } from "@/styles/color";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
-export default function HomeScreen() {
+export default function ProfileScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <Nav />
             <ScrollView style={styles.wrap}>
+                <View style={{ height: 100 }} />
             </ScrollView>
         </SafeAreaView>
     );
